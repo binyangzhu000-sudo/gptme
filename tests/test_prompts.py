@@ -41,7 +41,7 @@ def test_get_prompt_short():
 def test_get_prompt_custom():
     prompt_msgs = get_prompt([], prompt="Hello world!")
     assert len(prompt_msgs) == 1
-    assert prompt_msgs[0].content == "Hello world!"
+    assert prompt_msgs[0].content.startswith("Hello world!")
 
 
 def test_get_prompt_selective_tools_always_included():
@@ -122,7 +122,10 @@ def test_get_prompt_stats_short_without_tools_keeps_minimal_core():
         context_include=[],
     )
 
-    assert [section.name for section in stats.sections] == ["prompt_gptme"]
+    assert [section.name for section in stats.sections] == [
+        "prompt_gptme",
+        "prompt_fragment:deployment",
+    ]
 
 
 def test_get_prompt_stats_includes_workspace_and_dynamic_context(tmp_path):
