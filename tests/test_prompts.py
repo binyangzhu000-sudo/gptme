@@ -39,12 +39,7 @@ def test_get_prompt_short():
 
 
 def test_get_prompt_custom(monkeypatch):
-    monkeypatch.setattr(
-        "gptme.prompts.get_config",
-        lambda: SimpleNamespace(
-            user=SimpleNamespace(prompt=SimpleNamespace(fragments={}))
-        ),
-    )
+    monkeypatch.setattr("gptme.prompts._prompt_fragment_sections", lambda: [])
     prompt_msgs = get_prompt([], prompt="Hello world!")
     assert len(prompt_msgs) == 1
     assert prompt_msgs[0].content == "Hello world!"
@@ -121,12 +116,7 @@ def test_get_prompt_stats_breaks_out_sections(monkeypatch):
 
 
 def test_get_prompt_stats_short_without_tools_keeps_minimal_core(monkeypatch):
-    monkeypatch.setattr(
-        "gptme.prompts.get_config",
-        lambda: SimpleNamespace(
-            user=SimpleNamespace(prompt=SimpleNamespace(fragments={}))
-        ),
-    )
+    monkeypatch.setattr("gptme.prompts._prompt_fragment_sections", lambda: [])
     stats = get_prompt_stats(
         [],
         prompt="short",
