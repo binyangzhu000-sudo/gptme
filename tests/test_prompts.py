@@ -38,10 +38,16 @@ def test_get_prompt_short():
     assert 400 < len_tokens(combined_content, "gpt-4") < 4500 + user_config_size
 
 
-def test_get_prompt_custom():
+def test_get_prompt_custom(monkeypatch):
+    monkeypatch.setattr(
+        "gptme.prompts.get_config",
+        lambda: SimpleNamespace(
+            user=SimpleNamespace(prompt=SimpleNamespace(fragments={}))
+        ),
+    )
     prompt_msgs = get_prompt([], prompt="Hello world!")
     assert len(prompt_msgs) == 1
-    assert prompt_msgs[0].content.startswith("Hello world!")
+    assert prompt_msgs[0].content == "Hello world!"
 
 
 def test_get_prompt_selective_tools_always_included():
